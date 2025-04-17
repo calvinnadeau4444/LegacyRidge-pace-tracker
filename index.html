@@ -55,7 +55,7 @@
   </div>
 
   <script>
-    const holeTimes = [14,12,13,15,14,13,12,16,14,13,15,14,13,12,14,15,13,14];
+    const holeTimes = [15,15,16,11,14,20,13,9,10,17,20,13,17,15,13,10,14,17];
 
     function showTab(id) {
       document.querySelectorAll('.tab').forEach(div => div.classList.remove('active'));
@@ -108,7 +108,7 @@
       const times = reorder(holeTimes, startHole1);
       const { hole, percent } = getHoleProgress(elapsed, times);
       const actualHole = startHole1 === 1 ? hole : ((hole + 9 > 18) ? hole - 9 : hole + 9);
-      result1.innerText = `You are ${percent.toFixed(1)}% through Hole ${actualHole}.`;
+      result1.innerText = `Golfers should be ${percent.toFixed(1)}% through Hole ${actualHole}.`;
     }
 
     function calculatePace() {
@@ -130,7 +130,7 @@
       const actualHole = startHole2 === 1 ? hole : ((hole + 9 > 18) ? hole - 9 : hole + 9);
       result2.innerText =
         `You are ${Math.abs(diff).toFixed(1)} min ${status} pace.
-You should be ${percent.toFixed(1)}% through Hole ${actualHole}.`;
+Golfers should be ${percent.toFixed(1)}% through Hole ${actualHole}.`;
     }
   </script>
 </body>
