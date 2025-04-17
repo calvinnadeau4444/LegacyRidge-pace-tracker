@@ -19,13 +19,13 @@
   <h2>Golf Group Pace Tracker</h2>
 
   <div class="tabs">
-    <button onclick="showTab('timeTab')">Time Tracker</button>
+    <button onclick="showTab('timeTab')">Where Golfers Should Be</button>
     <button onclick="showTab('paceTab')">Pace Tracker</button>
   </div>
 
   <div id="timeTab" class="tab">
     <label>Tee Time:</label>
-    Hour: <input type="number" id="teeHour1" min="0" max="23">
+    Hour (24H): <input type="number" id="teeHour1" min="0" max="23">
     Minute: <input type="number" id="teeMin1" min="0" max="59">
 
     <label>Starting Hole: <span id="selectedHole"></span></label>
@@ -112,26 +112,36 @@
     }
 
     function calculatePace() {
-      const teeHour = Number(document.getElementById("teeHour2").value) || 0;
-      const teeMin = Number(document.getElementById("teeMin2").value) || 0;
-      const teeTime = teeHour * 60 + teeMin;
+  const teeHour = Number(document.getElementById("teeHour2").value) || 0;
+  const teeMin = Number(document.getElementById("teeMin2").value) || 0;
+  const teeTime = teeHour * 60 + teeMin;
 
-      const now = new Date();
-      const currTime = now.getHours() * 60 + now.getMinutes();
-      const elapsed = currTime - teeTime;
+  const now = new Date();
+  const currTime = now.getHours() * 60 + now.getMinutes();
+  const elapsed = currTime - teeTime;
 
-      const holesDone = Number(document.getElementById("holesDone").value) || 0;
-      const times = reorder(holeTimes, startHole2);
-      const expected = times.slice(0, holesDone).reduce((a, b) => a + b, 0);
-      const diff = elapsed - expected;
-      const status = diff > 0 ? "behind" : "ahead";
+  const holesDone = Number(document.getElementById("holesDone").value) || 0;
+  const times = reorder(holeTimes, startHole2);
 
-      const { hole, percent } = getHoleProgress(elapsed, times);
-      const actualHole = startHole2 === 1 ? hole : ((hole + 9 > 18) ? hole - 9 : hole + 9);
-      result2.innerText =
-        `Golfers are ${Math.abs(diff).toFixed(1)} min ${status} pace.
+  // ✅ Calculate expected time for the number of holes actually completed
+  const expectedTime = times.slice(0, holesDone).reduce((a, b) => a + b, 0);
+
+  // ✅ Compute difference in minutes between actual and expected
+  const diff = elapsed - expectedTime;
+  const status = diff > 0 ? "behind" : diff < 0 ? "ahead" : "on";
+
+  // ✅ Calculate where they *should* be
+  const { hole, percent } = getHoleProgress(elapsed, times);
+  const actualHole = startHole2 === 1 ? hole : ((hole + 9 > 18) ? hole - 9 : hole + 9);
+
+  // 🧠 Format output
+  const paceMsg = status === "on"
+    ? "Golfers are exactly on pace."
+    : `Golfers are ${Math.abs(diff).toFixed(1)} min ${status} pace.`;
+
+  result2.innerText = `${paceMsg}
 Golfers should be ${percent.toFixed(1)}% through Hole ${actualHole}.`;
-    }
+}
   </script>
 </body>
 </html>
