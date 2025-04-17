@@ -129,7 +129,7 @@
       const { hole, percent } = getHoleProgress(elapsed, times);
       const actualHole = startHole2 === 1 ? hole : ((hole + 9 > 18) ? hole - 9 : hole + 9);
       result2.innerText =
-        `You are ${Math.abs(diff).toFixed(1)} min ${status} pace.
+        `Golfers are ${Math.abs(diff).toFixed(1)} min ${status} pace.
 Golfers should be ${percent.toFixed(1)}% through Hole ${actualHole}.`;
     }
   </script>
