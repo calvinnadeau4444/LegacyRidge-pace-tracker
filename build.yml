@@ -1,0 +1,31 @@
+name: Build WebAssembly
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Emscripten
+      uses: mymindstorm/setup-emsdk@v11
+      with:
+        version: latest
+
+    - name: Compile golf.cpp to golf.wasm
+      run: |
+        emcc golf.cpp -s WASM=1 -O3 \
+        -s EXPORTED_FUNCTIONS="['_getHoleIndex']" \
+        -s EXPORTED_RUNTIME_METHODS="['ccall','cwrap']" \
+        -o golf.wasm
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: golf-wasm
+        path: golf.wasm
